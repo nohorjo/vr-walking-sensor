@@ -26,3 +26,5 @@ def text(string, line):
     y = line * 9
     draw.rectangle((0, y, 128, y + 9), outline=0, fill=0)
     draw.text((0, y), string, font=font, fill=255)
+
+clear()
