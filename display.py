@@ -17,14 +17,14 @@ def show():
     disp.image(image)
     disp.show()
 
-# 21x7 grid
+# 21x5 grid
 def text(string, line):
-    if line >= 7 or line < 0:
+    if line >= 5 or line < 0:
         raise Exception('Invalid line number: %d'%(line))
     #  if len(string) > 21:
         #  raise Exception('String too long')
-    y = line * 9
-    draw.rectangle((0, y, 128, y + 9), outline=0, fill=0)
+    y = (line * 12) + 2
+    draw.rectangle((0, y, 128, y + 12), outline=0, fill=0)
     draw.text((0, y), string, font=font, fill=255)
 
 clear()
