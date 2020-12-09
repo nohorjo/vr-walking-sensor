@@ -1,11 +1,21 @@
-import subprocess
-
 import display
+import button
 
-date = subprocess.check_output('date', shell=True).decode("utf-8")
+def button_callback1():
+    display.text('1 pressed', 0)
+    display.show()
 
-display.text(date, 0)
-display.text('1234567890', 1)
-display.text('1234567890       ', 2)
-display.text('       1234567890', 2)
-display.show()
+def button_callback2():
+    display.text('2 pressed', 0)
+    display.show()
+
+def button_callback3():
+    display.text('3 pressed', 0)
+    display.show()
+
+button.create(17, button_callback1)
+button.create(18, button_callback2)
+button.create(27, button_callback3)
+
+input("Press enter to quit\n\n")
+display.clear()
