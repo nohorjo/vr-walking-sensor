@@ -1,13 +1,13 @@
 import display
 from button import Button
 from motor import Motor
+from accelerometers import Accelerometers
 
 from time import sleep
-from mpu6050 import mpu6050
 import RPi.GPIO as GPIO
 
 try:
-    sensor = mpu6050(0x68)
+    sensor = Accelerometers([5])
     m = Motor([22, 23, 24, 25])
     buttonLeft = Button(17)
     buttonCenter = Button(18)
@@ -20,19 +20,18 @@ try:
     printAcc = True
 
     while True:
-        accelerometer_data = sensor.get_accel_data()
-        gyro_data = sensor.get_gyro_data()
+        data = sensor.getData()
 
-        print('acc', accelerometer_data, 'gyro', gyro_data)
+        print(data)
         
         if printAcc:
-            display.text('Acc x: %f' % accelerometer_data['x'], 2)
-            display.text('Acc y: %f' % accelerometer_data['y'], 3)
-            display.text('Acc z: %f' % accelerometer_data['z'], 4)
+            display.text('Acc x: %.3f' % data['ax'], 2)
+            display.text('Acc y: %.3f' % data['ay'], 3)
+            display.text('Acc z: %.3f' % data['az'], 4)
         else:
-            display.text('Rot x: %f' % gyro_data['x'], 2)
-            display.text('Rot y: %f' % gyro_data['y'], 3)
-            display.text('Rot z: %f' % gyro_data['z'], 4)
+            display.text('Rot x: %.3f' % data['gx'], 2)
+            display.text('Rot y: %.3f' % data['gy'], 3)
+            display.text('Rot z: %.3f' % data['gz'], 4)
 
         if buttonLeft.isPressed():
             display.text('Rotate anticlockwise', 1)
@@ -50,7 +49,7 @@ try:
         display.show()
 
         sleep(0.16)
-except:
+finally:
     display.clear()
     GPIO.cleanup()
 
