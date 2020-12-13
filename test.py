@@ -9,11 +9,28 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 
 try:
-    sensor = Accelerometers([5])
-    m = Motor([22, 23, 24, 25])
-    button_left = Button(17)
-    button_center = Button(18)
-    button_right = Button(27)
+    button_left = Button(4)
+    button_center = Button(17)
+    button_right = Button(18)
+
+    sensor = Accelerometers([
+        27, # brown
+        22, # yellow
+        23, # orange
+    ])
+
+    motor_x = Motor([
+        24, # black
+        25, # purple
+        5, # white
+        6, # green
+    ])
+    motor_y = Motor([
+        12, # orange
+        13, # red
+        16, # brown
+        26, # yellow
+    ])
 
     angles = [10, 20, 30, 45, 60, 90, 120, 180, 240, 275, 360]
     selected_angle = 0
@@ -37,7 +54,7 @@ try:
 
         if button_left.is_pressed():
             display.text('Rotate anticlockwise', 1)
-            m.rotate(-angles[selected_angle])
+            motor_x.rotate(-angles[selected_angle])
 
         if button_center.is_pressed():
             printAcc = not printAcc
@@ -46,7 +63,7 @@ try:
 
         if button_right.is_pressed():
             display.text('Rotate clockwise', 1)
-            m.rotate(angles[selected_angle])
+            motor_x.rotate(angles[selected_angle])
 
         display.show()
 
