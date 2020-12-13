@@ -11,18 +11,18 @@ GPIO.setmode(GPIO.BCM)
 try:
     sensor = Accelerometers([5])
     m = Motor([22, 23, 24, 25])
-    buttonLeft = Button(17)
-    buttonCenter = Button(18)
-    buttonRight = Button(27)
+    button_left = Button(17)
+    button_center = Button(18)
+    button_right = Button(27)
 
     angles = [10, 20, 30, 45, 60, 90, 120, 180, 240, 275, 360]
-    selectedAngle = 0
-    display.text('Will rotate %d' % angles[selectedAngle], 0)
+    selected_angle = 0
+    display.text('Will rotate %d' % angles[selected_angle], 0)
 
     printAcc = True
 
     while True:
-        data = sensor.getData()
+        data = sensor.get_data()
 
         print(data)
         
@@ -35,18 +35,18 @@ try:
             display.text('Rot y: %.3f' % data['gy'], 3)
             display.text('Rot z: %.3f' % data['gz'], 4)
 
-        if buttonLeft.isPressed():
+        if button_left.is_pressed():
             display.text('Rotate anticlockwise', 1)
-            m.rotate(-angles[selectedAngle])
+            m.rotate(-angles[selected_angle])
 
-        if buttonCenter.isPressed():
+        if button_center.is_pressed():
             printAcc = not printAcc
-            selectedAngle = (selectedAngle + 1) % len(angles)
-            display.text('Will rotate %d' % angles[selectedAngle], 0)
+            selected_angle = (selected_angle + 1) % len(angles)
+            display.text('Will rotate %d' % angles[selected_angle], 0)
 
-        if buttonRight.isPressed():
+        if button_right.is_pressed():
             display.text('Rotate clockwise', 1)
-            m.rotate(angles[selectedAngle])
+            m.rotate(angles[selected_angle])
 
         display.show()
 

@@ -19,7 +19,7 @@ class Motor:
             GPIO.setup(pin, GPIO.OUT)
 
     def disable(self):
-        self.__setStep([0, 0, 0, 0])
+        self.__set_step([0, 0, 0, 0])
 
     def rotate(self, degrees):
         if degrees < 0:
@@ -30,10 +30,10 @@ class Motor:
             delay = 0.002
         for i in range(round(abs(degrees) * 1.422)):
             for step in steps:
-                self.__setStep(step)
+                self.__set_step(step)
                 sleep(delay)
 
-    def __setStep(self, values):
+    def __set_step(self, values):
         for pin, value in zip(self.pins, values):
             GPIO.output(pin, value)
 

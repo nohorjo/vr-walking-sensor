@@ -9,5 +9,5 @@ class Button:
         self.pin = pin
         GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
-    def isPressed(self):
+    def is_pressed(self):
         return GPIO.input(self.pin)

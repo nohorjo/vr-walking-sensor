@@ -24,7 +24,7 @@ def text(string, line):
     #  if len(string) > 21:
         #  raise Exception('String too long')
     y = (line * 12) + 2
-    draw.rectangle((0, y, 128, y + 12), outline=0, fill=0)
-    draw.text((0, y), string, font=font, fill=255)
+    draw.rectangle((0, y, 128, y + 12), outline = 0, fill = 0)
+    draw.text((0, y), string, font = font, fill = 255)
 
 clear()
