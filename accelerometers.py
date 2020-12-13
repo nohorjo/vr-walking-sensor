@@ -2,12 +2,16 @@ from mpu6050 import mpu6050
 import RPi.GPIO as GPIO
 from time import sleep
 
+import display
+
 class Accelerometers:
-    def __init__(self, pins, sample_size = 200):
+    def __init__(self, pins, sample_size = 20):
         self.pins = pins
         self.offsets = []
 
         for index, pin in enumerate(pins):
+            display.text('init %d' % index, 0)
+            display.show()
             self.offsets.append({
                 'gx': 0,
                 'gy': 0,
@@ -47,19 +51,24 @@ class Accelerometers:
         az = 0
 
         for x in range(sample_size):
-            for y in range(10):
+            got_data = False
+            for y in range(100):
                 try:
                     gyro_data = self.sensor.get_gyro_data()
                     accelerometer_data = self.sensor.get_accel_data()
+                    got_data = True
                     break
                 except:
                     sleep(0.01)
-            gx = gx + gyro_data['x']
-            gy = gy + gyro_data['y']
-            gz = gz + gyro_data['z']
-            ax = ax + accelerometer_data['x']
-            ay = ay + accelerometer_data['y']
-            az = az + accelerometer_data['z']
+            if got_data:
+                gx = gx + gyro_data['x']
+                gy = gy + gyro_data['y']
+                gz = gz + gyro_data['z']
+                ax = ax + accelerometer_data['x']
+                ay = ay + accelerometer_data['y']
+                az = az + accelerometer_data['z']
+            else:
+                sample_size = sample_size - 1
 
         gx = gx / sample_size
         gy = gy / sample_size
