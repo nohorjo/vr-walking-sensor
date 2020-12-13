@@ -22,6 +22,7 @@ class Accelerometers:
             })
             GPIO.setup(pin, GPIO.OUT)
             GPIO.output(pin, 1)
+            sleep(0.01)
             self.sensor = mpu6050(0x69)
             self.calibrate(index, sample_size)
 
@@ -30,6 +31,7 @@ class Accelerometers:
         offsets = self.offsets[index]
 
         GPIO.output(pin, 1)
+        sleep(0.01)
         data = self.__get_data_no_set()
         GPIO.output(pin, 0)
 
@@ -52,14 +54,14 @@ class Accelerometers:
 
         for x in range(sample_size):
             got_data = False
-            for y in range(100):
+            for y in range(20):
                 try:
                     gyro_data = self.sensor.get_gyro_data()
                     accelerometer_data = self.sensor.get_accel_data()
                     got_data = True
                     break
                 except:
-                    sleep(0.01)
+                    sleep(0.1)
             if got_data:
                 gx = gx + gyro_data['x']
                 gy = gy + gyro_data['y']
@@ -97,6 +99,7 @@ class Accelerometers:
         az = 0
 
         GPIO.output(pin, 1)
+        sleep(0.01)
 
         for x in range(sample_size):
             data = self.__get_data_no_set()

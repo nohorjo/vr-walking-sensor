@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import display
 from button import Button
 from motor import Motor
