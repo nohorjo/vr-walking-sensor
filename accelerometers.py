@@ -2,8 +2,6 @@ from mpu6050 import mpu6050
 import RPi.GPIO as GPIO
 from time import sleep
 
-GPIO.setmode(GPIO.BCM)
-
 class Accelerometers:
     def __init__(self, pins, sample_size = 200):
         self.pins = pins

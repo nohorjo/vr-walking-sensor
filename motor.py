@@ -1,8 +1,6 @@
 import RPi.GPIO as GPIO
 from time import sleep
  
-GPIO.setmode(GPIO.BCM)
-
 Seq = [
     [1,0,0,0],
     [1,1,0,0],

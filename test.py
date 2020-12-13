@@ -6,6 +6,8 @@ from accelerometers import Accelerometers
 from time import sleep
 import RPi.GPIO as GPIO
 
+GPIO.setmode(GPIO.BCM)
+
 try:
     sensor = Accelerometers([5])
     m = Motor([22, 23, 24, 25])
