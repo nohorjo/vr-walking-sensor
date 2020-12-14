@@ -72,6 +72,9 @@ class Accelerometers:
             else:
                 sample_size = sample_size - 1
 
+        if sample_size is 0:
+            sample_size = 1
+
         gx = gx / sample_size
         gy = gy / sample_size
         gz = gz / sample_size
