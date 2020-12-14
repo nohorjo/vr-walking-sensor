@@ -2,7 +2,7 @@ from mpu6050 import mpu6050
 import RPi.GPIO as GPIO
 from time import sleep
 
-import display
+import loading
 
 class Accelerometers:
     def __init__(self, pins, sample_size = 20):
@@ -14,8 +14,7 @@ class Accelerometers:
             GPIO.output(pin, 0)
 
         for index, pin in enumerate(pins):
-            display.text('init %d' % index, 0)
-            display.show()
+            loading.update()
             self.offsets.append({
                 'gx': 0,
                 'gy': 0,
@@ -108,6 +107,7 @@ class Accelerometers:
         sleep(0.01)
 
         for x in range(sample_size):
+            loading.update()
             data = self.__get_data_no_set()
             gx = gx + data['gx']
             gy = gy + data['gy']
@@ -115,6 +115,8 @@ class Accelerometers:
             ax = ax + data['ax']
             ay = ay + data['ay']
             az = az + data['az']
+
+        loading.update()
 
         GPIO.output(pin, 0)
 

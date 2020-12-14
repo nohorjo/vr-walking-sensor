@@ -2,6 +2,7 @@
 
 from accelerometers import Accelerometers
 import display
+import loading
 
 from time import sleep
 import RPi.GPIO as GPIO
@@ -10,10 +11,11 @@ GPIO.setmode(GPIO.BCM)
 
 try:
     sensor = Accelerometers([
-        27, # brown
         22, # yellow
         23, # orange
-    ])
+        27, # brown
+    ], sample_size = 1)
+    loading.done = True
     display.clear()
 
     while True:
