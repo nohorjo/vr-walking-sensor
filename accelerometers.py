@@ -25,7 +25,10 @@ class Accelerometers:
             })
             GPIO.output(pin, 1)
             sleep(0.01)
-            self.sensor = mpu6050(0x69)
+            try:
+                self.sensor = mpu6050(0x69)
+            except:
+                pass
             self.calibrate(index, sample_size)
 
     def get_data(self, index = 0):
