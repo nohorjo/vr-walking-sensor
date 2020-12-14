@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import os
-
 from accelerometers import Accelerometers
 import display
 
@@ -23,7 +21,6 @@ try:
         for i in range(3):
             data[i] = sensor.get_data(i)
 
-        os.system('clear')
         print("""
             0 = ax: %.2f, ay: %.2f, az: %.2f\tgx: %.2f, gy: %.2f, gz: %.2f
             1 = ax: %.2f, ay: %.2f, az: %.2f\tgx: %.2f, gy: %.2f, gz: %.2f
