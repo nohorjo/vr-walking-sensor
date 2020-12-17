@@ -5,4 +5,10 @@ Components:
 - MPU-6050 accelerometers
 - SSD1306 128x64 OLED display
 - ESP32 Bluetooth board
-- 28BYJ-48 stepper motor with Uln2003 driver board
+- ESP8266 board * 3
+- 28BYJ-48 stepper motor with Uln2003 driver board * 2
+
+Arduino Libraries:
+- https://github.com/me-no-dev/ESPAsyncWebServer
+- https://github.com/me-no-dev/ESPAsyncTCP
+- https://github.com/nohorjo/arduinoWebSockets
