@@ -1,2 +1,11 @@
 Session.vim
+*.swp
+.fuse*
+3d-print-parts/stl/*
+*.3mf
+*.scad
 __pycache__/
+*.isdep
+*.dep
+
+*.orig
