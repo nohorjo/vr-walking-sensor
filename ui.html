@@ -1,0 +1,5 @@
+Open devtools and use <code>ws</code> object
+<script>
+  const ws = new WebSocket(`ws://${location.hostname}:${+location.port + 1}`);
+  ws.onmessage = m => console.log(m);
+</script>

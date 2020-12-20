@@ -13,3 +13,6 @@ Arduino Libraries:
 - https://github.com/me-no-dev/ESPAsyncTCP
 - https://github.com/me-no-dev/AsyncTCP
 - https://github.com/nohorjo/arduinoWebSockets
+
+Python Libraries:
+- websockets
