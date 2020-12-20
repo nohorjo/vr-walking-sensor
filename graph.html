@@ -1,0 +1,48 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
+<input type="file" id="file-input" />
+<button id="read-button">Read File</button>
+<canvas id="myChart" width="800" height="400"></canvas>
+
+<script>
+  document.querySelector("#read-button").addEventListener('click', function() {
+    let file = document.querySelector("#file-input").files[0];
+    let reader = new FileReader();
+    reader.addEventListener('load', function(e) {
+      drawChart(Papa.parse(e.target.result).data.map(([date, ax, ay, az, gx, gy, gz]) => ({
+          date: +date,
+          ax: +ax,
+          ay: +ay,
+          az: +az,
+          gx: +gx,
+          gy: +gy,
+          gz: +gz,
+        })));
+    });
+    reader.readAsText(file);
+  });
+
+  let data, chart;
+
+  function drawChart(d) {
+    data = {
+      labels: d.map(x => x.date),
+      datasets: ['ax', 'ay', 'az', 'gx', 'gy', 'gz'].map(label => ({
+        label,
+        fill: false,
+        data: d.map(x => x[label]),
+        borderColor: `rgba(${Math.random() * 255 | 0}, ${Math.random() * 255 | 0}, ${Math.random() * 255 | 0}, 0.5)`,
+        pointRadius: 0,
+      })),
+    };
+    chart = new Chart(document.getElementById('myChart'), {
+      type: 'line',
+      data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    });
+  }
+</script>

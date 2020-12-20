@@ -7,6 +7,10 @@ import _thread
 import asyncio
 import websockets
 
+from datetime import datetime
+
+start = datetime.now()
+
 PORT = 4512
 
 class UIHandler(SimpleHTTPRequestHandler):
@@ -23,7 +27,7 @@ def start_http():
 
 async def PrintMessage(websocket, path):
     async for message in websocket:
-        print(message)
+        print(round((datetime.now() - start).total_seconds() * 1000), ',', message[1::])
 
 
 if __name__ == "__main__":
