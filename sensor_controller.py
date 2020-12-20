@@ -7,7 +7,7 @@ import _thread
 import asyncio
 import websockets
 
-PORT = 8000
+PORT = 4512
 
 class UIHandler(SimpleHTTPRequestHandler):
     def do_GET(self):

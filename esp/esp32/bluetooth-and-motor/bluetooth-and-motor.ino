@@ -6,11 +6,11 @@
 const char* ssid = "VRWALINGSENSORf8b7244402318";
 const char* password = "4d34c0958460d";
 
-IPAddress local_IP(192, 168, 4, 22);
-IPAddress gateway(192, 168, 4, 9);
+IPAddress local_IP(192, 168, 1, 15);
+IPAddress gateway(192, 168, 1, 9);
 IPAddress subnet(255, 255, 255, 0);
 
-AsyncWebServer server(80);
+AsyncWebServer server(4513);
 AsyncWebSocket ws("/ws");
 
 AsyncWebSocketClient* pi; // reference to pi client

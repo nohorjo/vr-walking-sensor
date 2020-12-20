@@ -34,7 +34,7 @@ void setup_all() {
 
     delay(5000);
 
-    webSocket.begin("192.168.4.22", 80);
+    webSocket.begin("192.168.1.15", 4513);
 }
 
 void send_data(char prefix) {
