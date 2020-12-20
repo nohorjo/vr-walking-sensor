@@ -41,13 +41,28 @@ void send_data(char prefix) {
     Get_Data();
 
     webSocket.loop();
-    char data[45];
-    if (prefix == 'h') {
-        sprintf(data, "%c%d,%d,%d", prefix, Gx, Gy, Gz);
-    } else {
-        sprintf(data, "%c%d,%d,%d,%d,%d,%d", prefix, Ax, Ay, Az, Gx, Gy, Gz);
+    if (
+        Ax > 6000
+        || Ax < 5000
+        || Ay > -300
+        || Ay < -1000
+        || Az > -18000
+        || Az < -18500
+        || Gx > 400
+        || Gx < -500
+        || Gy > -100
+        || Gy < -400
+        || Gz > 400
+        || Gz < -300
+    ) {
+        char data[45];
+        if (prefix == 'h') {
+            sprintf(data, "%c%d,%d,%d", prefix, Gx, Gy, Gz);
+        } else {
+            sprintf(data, "%c%d,%d,%d,%d,%d,%d", prefix, Ax, Ay, Az, Gx, Gy, Gz);
+        }
+        webSocket.sendTXT(data);
     }
-    webSocket.sendTXT(data);
 
     delay(11);
 }

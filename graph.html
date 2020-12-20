@@ -1,7 +1,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 
-<input type="file" id="file-input" />
+<input type="file" id="file-input" accept=".csv"/>
 <button id="read-button">Read File</button>
 <canvas id="myChart" width="800" height="400"></canvas>
 
@@ -32,7 +32,7 @@
         label,
         fill: false,
         data: d.map(x => x[label]),
-        borderColor: `rgba(${Math.random() * 255 | 0}, ${Math.random() * 255 | 0}, ${Math.random() * 255 | 0}, 0.5)`,
+        borderColor: `rgba(${Math.random() * 255 | 0}, ${Math.random() * 255 | 0}, ${Math.random() * 255 | 0}, 1)`,
         pointRadius: 0,
       })),
     };
