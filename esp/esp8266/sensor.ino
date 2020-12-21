@@ -20,7 +20,7 @@ const uint8_t MPU6050SlaveAddress = 0x68;
 #define MPU6050_REGISTER_ACCEL_XOUT_H      0x3B
 #define MPU6050_REGISTER_SIGNAL_PATH_RESET 0x68
 
-int16_t Ax, Ay, Az, Gx, Gy, Gz;
+int16_t Ax, Ay, Gz;
 
 WebSocketsClient webSocket;
 
@@ -46,20 +46,14 @@ void send_data(char prefix) {
         || Ax < 5000
         || Ay > -300
         || Ay < -1000
-        || Az > -18000
-        || Az < -18500
-        || Gx > 400
-        || Gx < -500
-        || Gy > -100
-        || Gy < -400
         || Gz > 400
         || Gz < -300
     ) {
-        char data[45];
+        char data[15];
         if (prefix == 'h') {
-            sprintf(data, "%c%d,%d,%d", prefix, Gx, Gy, Gz);
+            sprintf(data, "%c%d", prefix, Gz);
         } else {
-            sprintf(data, "%c%d,%d,%d,%d,%d,%d", prefix, Ax, Ay, Az, Gx, Gy, Gz);
+            sprintf(data, "%c%d,%d", prefix, Ax, Ay);
         }
         webSocket.sendTXT(data);
     }
@@ -83,12 +77,12 @@ void Get_Data(){
 
     Ax = (((int16_t)Wire.read()<<8) | Wire.read());
     Ay = (((int16_t)Wire.read()<<8) | Wire.read());
-    Az = (((int16_t)Wire.read()<<8) | Wire.read());
 
+    Wire.read(); Wire.read(); // skip az
     Wire.read(); Wire.read(); // skip temp
+    Wire.read(); Wire.read(); // skip gx
+    Wire.read(); Wire.read(); // skip gy
 
-    Gx = (((int16_t)Wire.read()<<8) | Wire.read());
-    Gy = (((int16_t)Wire.read()<<8) | Wire.read());
     Gz = (((int16_t)Wire.read()<<8) | Wire.read());
 }
 
