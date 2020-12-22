@@ -5,6 +5,18 @@ from constants import *
 from moveable_point import *
 from super_hole import *
 
+t = 2.5
+
+def platform_with_holes(x, y):
+    model = cube([x, y, t])
+    
+    hole_d = 3.5
+    hole_offset = 1.7
+    for a in [hole_offset + (hole_d / 2), y - hole_offset - (hole_d / 2)]:
+        model -= translate([4, a])(cylinder(d = hole_d, h = t))
+
+    return model
+
 def strap():
     h = 90.0
     model = hull()(cylinder(d = 80) + up(h)(cylinder(d = 120)))
@@ -23,22 +35,30 @@ def strap():
 
     return model
 
-def component_block(is_right):
-    battery_dims = [65.0, 10.0, 67.0]
-    t = 2.5
-    x = battery_dims[0] + t
-    y = 35.0
-    battery_block = cube([x, y, battery_dims[2] + t]) - translate([t / 2, y - battery_dims[1] + 0.01, t / 2])(super_hole(cube(battery_dims), 'battery_block'))
-    battery_block += cube([85, 20, 30])
-    battery_block = rotate(10, LEFT_VEC)(battery_block)
+def component_block():
+    big_x = 10.5
+    big_y = 32.0
+    small_y = 22.0
 
-    sensor_block = forward(25)(cube([20, 10, 12])) + forward(10)(cube([20, 25, 6]))
-    if is_right:
-        sensor_block = translate([20, 35])(rotate(180, UP_VEC)(sensor_block))
+    pcb_holder = platform_with_holes(big_x, big_y)
+    pcb_holder += translate([big_x, (big_y - small_y) / 2, t])(
+        rotate(90, BACK_VEC)(platform_with_holes(8.0, small_y)
+    ))
 
-    battery_block += translate([0, 22, 61])(sensor_block)
+    pcb_holder = rotate(90, BACK_VEC)(pcb_holder)
+    pcb_holder = rotate(90, DOWN_VEC)(pcb_holder)
 
-    model = translate([-x / 2, 28, 20])(battery_block)
+    model = translate([-20, 15, 10])(
+        rotate(12.5, LEFT_VEC)(
+            cube([40, 35, 35])
+            + right(11)(cube([18, 35, 55]))
+            + background(translate([-10, 36, -23])(cube([63, 10, 67])))
+        )
+        + translate([4, 70, 37])(
+            pcb_holder
+            + translate([7, -40])(cube([18, 40, 10]))
+        )
+    )
 
     model -= strap()
 
@@ -46,4 +66,5 @@ def component_block(is_right):
 
 if __name__ == '__main__':
     model = strap()
+
     scad_render_to_file(model, '_%s.scad'% __file__[:-3])
