@@ -8,6 +8,11 @@ Components:
 - ESP8266 board * 3
 - 28BYJ-48 stepper motor with Uln2003 driver board * 2
 
+Software:
+- Arduino IDE - for the microcontrollers
+- Python3 - to process the sensor data
+- OpenScad - for rendering the 3d models
+
 Arduino Libraries:
 - https://github.com/me-no-dev/ESPAsyncWebServer
 - https://github.com/me-no-dev/ESPAsyncTCP
@@ -15,4 +20,5 @@ Arduino Libraries:
 - https://github.com/nohorjo/arduinoWebSockets
 
 Python Libraries:
+- https://github.com/SolidCode/SolidPython
 - websockets
