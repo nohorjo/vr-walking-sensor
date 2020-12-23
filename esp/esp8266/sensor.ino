@@ -20,11 +20,7 @@ const uint8_t MPU6050SlaveAddress = 0x68;
 #define MPU6050_REGISTER_ACCEL_XOUT_H      0x3B
 #define MPU6050_REGISTER_SIGNAL_PATH_RESET 0x68
 
-int16_t Ax, Ay, Gz;
-
-WebSocketsClient webSocket;
-
-void setup_all() {
+void setup() {
     Wire.begin(D7, D6);
     MPU6050_Init();
     WiFi.begin(ssid, password);
@@ -34,31 +30,11 @@ void setup_all() {
 
     delay(5000);
 
-    webSocket.begin("192.168.1.15", 4513);
-}
+    char url[2];
+    sprintf(url, "/%c", code);
 
-void send_data(char prefix) {
-    Get_Data();
-
-    webSocket.loop();
-    if (
-        Ax > 6000
-        || Ax < 5000
-        || Ay > -300
-        || Ay < -1000
-        || Gz > 400
-        || Gz < -300
-    ) {
-        char data[15];
-        if (prefix == 'h') {
-            sprintf(data, "%c%d", prefix, Gz);
-        } else {
-            sprintf(data, "%c%d,%d", prefix, Ax, Ay);
-        }
-        webSocket.sendTXT(data);
-    }
-
-    delay(11);
+    webSocket.begin("192.168.1.15", 4513, url);
+    webSocket.onEvent(webSocketEvent);
 }
 
 void I2C_Write(uint8_t regAddress, uint8_t data){
