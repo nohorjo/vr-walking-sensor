@@ -54,8 +54,18 @@ def watch_actions():
         else:
             x_rate = 1 / (datetime.now() - sr_last).total_seconds()
 
-        x_rate = x_rate / 2000
-        y_rate = y_rate / 2000
+        x_rate = x_rate / 15000
+        y_rate = y_rate / 15000
+
+        if x_rate > 1:
+            x_rate = 1
+        elif x_rate < -1:
+            x_rate = -1
+
+        if y_rate > 1:
+            y_rate = 1
+        elif y_rate < -1:
+            y_rate = -1
 
         out = '%f,%f' % (x_rate, y_rate)
         print(out)
