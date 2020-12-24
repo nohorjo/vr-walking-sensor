@@ -37,11 +37,17 @@ void loop() {
 
     webSocket.loop();
 
-    if (
-        Ax < Ax_lower
-        || Ay > Ay_upper
-        || Ay < Ay_lower
-    ) {
+    if (Ax_lower && Ay_upper && Ay_lower) {
+        if (Ax < Ax_lower) {
+            webSocket.sendTXT("s");
+        }
+        if (Ay > Ay_upper) {
+            webSocket.sendTXT("f");
+        }
+        if (Ay < Ay_lower) {
+            webSocket.sendTXT("b");
+        }
+    } else {
         char data[15];
         sprintf(data, "%d,%d", Ax, Ay);
         webSocket.sendTXT(data);
