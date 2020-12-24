@@ -10,15 +10,11 @@
     let file = document.querySelector("#file-input").files[0];
     let reader = new FileReader();
     reader.addEventListener('load', function(e) {
-      drawChart(Papa.parse(e.target.result).data.map(([date, ax, ay, az, gx, gy, gz]) => ({
-          date: +date,
-          ax: +ax,
-          ay: +ay,
-          az: +az,
-          gx: +gx,
-          gy: +gy,
-          gz: +gz,
-        })));
+      const d = Papa.parse(e.target.result).data.filter(([x, y]) => +x && +y).map(([x, y]) => ({
+        x: +x,
+        y: +y,
+      }));
+      drawChart(d);
     });
     reader.readAsText(file);
   });
@@ -27,12 +23,12 @@
 
   function drawChart(d) {
     data = {
-      labels: d.map(x => x.date),
-      datasets: ['ax', 'ay', 'az', 'gx', 'gy', 'gz'].map(label => ({
+      labels: d.map((_, i) => i),
+      datasets: ['x', 'y'].map(label => ({
         label,
         fill: false,
         data: d.map(x => x[label]),
-        borderColor: `rgba(${Math.random() * 255 | 0}, ${Math.random() * 255 | 0}, ${Math.random() * 255 | 0}, 1)`,
+        borderColor: `rgb(${Math.random() * 255 | 0}, ${Math.random() * 255 | 0}, ${Math.random() * 255 | 0})`,
         pointRadius: 0,
       })),
     };
