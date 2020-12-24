@@ -40,6 +40,10 @@ def watch_actions():
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
+    x_prev = 0
+    y_prev = 0
+    max_diff = 0.6
+
     while True:
         x_rate = 0
         y_rate = 0
@@ -54,8 +58,12 @@ def watch_actions():
         else:
             x_rate = 1 / (datetime.now() - sr_last).total_seconds()
 
-        x_rate = x_rate / 15000
-        y_rate = y_rate / 15000
+        x_rate = round(x_rate, 2)
+        y_rate = round(y_rate, 2)
+
+        x_rate = x_rate / 50
+        y_rate = y_rate / 30
+
 
         if x_rate > 1:
             x_rate = 1
@@ -67,11 +75,14 @@ def watch_actions():
         elif y_rate < -1:
             y_rate = -1
 
-        out = '%f,%f' % (x_rate, y_rate)
-        print(out)
+        if abs(x_prev - x_rate) < max_diff and abs(x_prev - x_rate) < max_diff:
+            out = '%f,%f' % (x_rate, y_rate)
 
-        if ui_socket is not None:
-            asyncio.get_event_loop().run_until_complete(ui_socket.send(out))
+            if ui_socket is not None:
+                asyncio.get_event_loop().run_until_complete(ui_socket.send(out))
+
+        x_prev = x_rate
+        y_prev = y_rate
 
         sleep(0.016)
 
@@ -111,10 +122,13 @@ async def handle_data(websocket, path):
                     y_count = len(y_vals)
                     calibrating = False
 
+                    LOWER = 0.2
+                    UPPER = 0.8
+
                     result = '%d,%d,%d' % (
-                        x_vals[round(len(x_vals) * (0.75 if path == '/r' else 0.25))],
-                        y_vals[round(y_count * 0.75)],
-                        y_vals[round(y_count * 0.25)],
+                        x_vals[round(len(x_vals) * (UPPER if path == '/r' else LOWER))],
+                        y_vals[round(y_count * UPPER)],
+                        y_vals[round(y_count * LOWER)],
                     )
 
                     print(path, result)

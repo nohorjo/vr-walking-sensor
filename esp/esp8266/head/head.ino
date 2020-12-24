@@ -10,21 +10,19 @@ int16_t Ax, Ay, Gz;
 WebSocketsClient webSocket;
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
-    switch(type) {
-        case WStype_TEXT:
-            char *ptr = strtok((char*)payload, ",");
-            for (int i = 0; ptr != NULL; i++) {
-                switch (i) {
-                    case 1:
-                        Gz_upper = atoi(ptr);
-                        break;
-                    case 2:
-                        Gz_lower = atoi(ptr);
-                        break;
-                }
-                ptr = strtok(NULL, ",");
+    if (type == WStype_TEXT) {
+        char *ptr = strtok((char*)payload, ",");
+        for (int i = 0; ptr != NULL; i++) {
+            switch (i) {
+                case 1:
+                    Gz_upper = atoi(ptr);
+                    break;
+                case 2:
+                    Gz_lower = atoi(ptr);
+                    break;
             }
-        break;
+            ptr = strtok(NULL, ",");
+        }
     }
 }
 

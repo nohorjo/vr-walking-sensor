@@ -7,6 +7,7 @@ Open devtools and use <code>ws</code> object
     if (waiting) {
         return;
     }
+    console.log(x, y);
     waiting = true;
     setTimeout(() => waiting = false, 50);
     function circle(cx, cy, fill, radius) {
@@ -24,6 +25,7 @@ Open devtools and use <code>ws</code> object
       context.stroke();
     }
 
+    circle(0, 0, '#fff', 500);
     circle(0, 0, '#ccc', 250);
 
     lastN.forEach(v => circle(...v, '#ddd', 15));
@@ -35,6 +37,11 @@ Open devtools and use <code>ws</code> object
 
   draw(0, 0);
 
-  const ws = new WebSocket(`ws://${location.hostname}:${+location.port + 1}/ui`);
-  ws.onmessage = m => draw(...m.data.split(',').map(x => +x));
+  function open() {
+    const ws = new WebSocket(`ws://${location.hostname}:${+location.port + 1}/ui`);
+    ws.onmessage = m => draw(...m.data.split(',').map(x => +x));
+    ws.onclose = () => setTimeout(open, 2000);
+  }
+
+  open();
 </script>
