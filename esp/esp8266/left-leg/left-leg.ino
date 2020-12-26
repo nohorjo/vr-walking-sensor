@@ -1,6 +1,6 @@
 #include <WebSocketsClient.h>
 
-char code = 'l';
+#define URL "/l"
 
 int16_t Ax_lower = 0;
 int16_t Ay_upper = 0;

@@ -30,10 +30,7 @@ void setup() {
 
     delay(5000);
 
-    char url[2];
-    sprintf(url, "/%c", code);
-
-    webSocket.begin("192.168.1.15", 4513, url);
+    webSocket.begin("192.168.1.15", 4513, URL);
     webSocket.onEvent(webSocketEvent);
 }
 

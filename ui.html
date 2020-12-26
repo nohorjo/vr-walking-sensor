@@ -1,17 +1,63 @@
-Open devtools and use <code>ws</code> object
-<canvas width="500" height="500"></canvas>
+<script type="text/javascript" src="https://momentjs.com/downloads/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@latest/dist/chartjs-plugin-streaming.min.js"></script>
+
+<div style="display: flex">
+  <div>
+    <canvas width="500" height="500" id="joy"></canvas>
+  </div>
+  <div>
+    <canvas width="1000" height="500" id="myChart"></canvas>
+  </div>
+</div>
 <script>
   let lastN = [];
   let waiting = false;
+
+  const chart = new Chart(document.getElementById('myChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      datasets: [{
+        label: 'x',
+        data: [],
+        fill: false,
+        borderColor: '#f00',
+        pointRadius: 0,
+      }, {
+        label: 'y',
+        data: [],
+        fill: false,
+        borderColor: '#0ff',
+        pointRadius: 0,
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          type: 'realtime',
+          realtime: {delay: 1000},
+        }],
+      }
+    }
+  });
+
   function draw(x, y) {
     if (waiting) {
         return;
     }
+    chart.data.datasets[0].data.push({
+      x: Date.now(),
+      y: x,
+    });
+    chart.data.datasets[1].data.push({
+      x: Date.now(),
+      y: y,
+    });
     console.log(x, y);
     waiting = true;
     setTimeout(() => waiting = false, 50);
     function circle(cx, cy, fill, radius) {
-      const canvas = document.querySelector('canvas');
+      const canvas = document.getElementById('joy');
       const context = canvas.getContext('2d');
       const centerX = (250 * cx) + (canvas.width / 2);
       const centerY = (-250 * cy) + (canvas.height / 2);

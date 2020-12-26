@@ -42,7 +42,7 @@ def watch_actions():
 
     x_prev = 0
     y_prev = 0
-    max_diff = 0.6
+    max_diff = 0.3
 
     while True:
         x_rate = 0
@@ -61,19 +61,27 @@ def watch_actions():
         x_rate = round(x_rate, 2)
         y_rate = round(y_rate, 2)
 
-        x_rate = x_rate / 50
-        y_rate = y_rate / 30
+        out = '%.2f,%.2f' % (x_rate, y_rate)
+        print(out)
+
+        x_rate = x_rate / 20
+        y_rate = y_rate / 20
 
 
         if x_rate > 1:
             x_rate = 1
         elif x_rate < -1:
             x_rate = -1
+        elif abs(x_rate) < 0.1:
+            x_rate = 0
+
 
         if y_rate > 1:
             y_rate = 1
         elif y_rate < -1:
             y_rate = -1
+        elif abs(y_rate) < 0.1:
+            y_rate = 0
 
         if abs(x_prev - x_rate) < max_diff and abs(x_prev - x_rate) < max_diff:
             out = '%f,%f' % (x_rate, y_rate)
@@ -138,14 +146,15 @@ async def handle_data(websocket, path):
                         _thread.start_new_thread(watch_actions, ())
                         watch_launched = True
             else:
-                if message == 'f':
+                SWITCH_GRACE = 0.01
+                if message == 'f' and (datetime.now() - b_last).total_seconds() > SWITCH_GRACE:
                     f_last = datetime.now()
-                elif message == 'b':
+                elif message == 'b' and (datetime.now() - f_last).total_seconds() > SWITCH_GRACE:
                     b_last = datetime.now()
                 else:
-                    if path == '/l':
+                    if path == '/l' and (datetime.now() - sr_last).total_seconds() > SWITCH_GRACE:
                         sl_last = datetime.now()
-                    else:
+                    elif (datetime.now() - sl_last).total_seconds() > SWITCH_GRACE:
                         sr_last = datetime.now()
 
 if __name__ == "__main__":
