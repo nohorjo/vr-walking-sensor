@@ -2,19 +2,64 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 
 <input type="file" id="file-input" accept=".csv"/>
-<button id="read-button">Read File</button>
 <canvas id="myChart" width="800" height="400"></canvas>
 
 <script>
-  document.querySelector("#read-button").addEventListener('click', function() {
-    let file = document.querySelector("#file-input").files[0];
+  const GROUP = 25;
+
+  const percentile  = (arr, p) => arr[Math.ceil(arr.length * p) - 1];
+
+  const middle = arr => {
+    const sorted = [...arr].sort();
+    return [percentile(sorted, 0.43), percentile(sorted, 0.57)];
+  }
+
+  const group = (v, i, arr) => arr.slice(Math.max(0, i - GROUP), i).reduce((s, d) => s + d, 0) / GROUP;
+
+  const change = (v, i, arr) => i ? v - arr[i - 1] : 0;
+
+  const zip = arrs => {
+    const rtn = [];
+    const keys = Object.keys(arrs);
+    for (let i = 0; i < arrs[keys[0]].length; i++) {
+      const item = {};
+      keys.forEach(key => {
+          item[key] = arrs[key][i];
+      });
+      rtn.push(item);
+    }
+
+    return rtn;
+  };
+
+  document.querySelector("#file-input").addEventListener('change', function(ev) {
+    let file = ev.target.files[0];
     let reader = new FileReader();
     reader.addEventListener('load', function(e) {
-      const d = Papa.parse(e.target.result).data.filter(([x, y]) => +x && +y).map(([x, y]) => ({
-        x: +x,
-        y: +y,
+      const d = Papa.parse(e.target.result).data.filter(([x, y]) => +x && +y);
+
+      const xs = d.map(v => +v[0]);
+      const ys = d.map(v => +v[1]);
+
+      const gx = xs.map(group);
+      const gy = ys.map(group);
+
+      let dx = gx.map(change);
+      const dxm = middle(dx);
+      dx = dx.map(v => v < dxm[0] || v > dxm[1] ? v : 0);
+
+      let dy = gy.map(change);
+      const dym = middle(dy);
+      dy = dy.map(v => v < dym[0] || v > dym[1] ? v : 0);
+
+      drawChart(zip({
+        xs,
+        gx,
+        dx,
+        ys,
+        gy,
+        dy,
       }));
-      drawChart(d);
     });
     reader.readAsText(file);
   });
@@ -24,7 +69,7 @@
   function drawChart(d) {
     data = {
       labels: d.map((_, i) => i),
-      datasets: ['x', 'y'].map(label => ({
+      datasets: Object.keys(d[0]).map(label => ({
         label,
         fill: false,
         data: d.map(x => x[label]),
