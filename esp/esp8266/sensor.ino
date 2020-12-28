@@ -21,6 +21,8 @@ const uint8_t MPU6050SlaveAddress = 0x68;
 #define MPU6050_REGISTER_SIGNAL_PATH_RESET 0x68
 
 void setup() {
+    pinMode(D3, OUTPUT);
+    digitalWrite(D3, LOW);
     Wire.begin(D7, D6);
     MPU6050_Init();
     WiFi.begin(ssid, password);
@@ -31,7 +33,6 @@ void setup() {
     delay(5000);
 
     webSocket.begin("192.168.1.15", 4513, URL);
-    webSocket.onEvent(webSocketEvent);
 }
 
 void I2C_Write(uint8_t regAddress, uint8_t data){

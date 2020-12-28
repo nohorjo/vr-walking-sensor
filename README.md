@@ -18,6 +18,7 @@ Arduino Libraries:
 - https://github.com/me-no-dev/ESPAsyncTCP
 - https://github.com/me-no-dev/AsyncTCP
 - https://github.com/nohorjo/arduinoWebSockets
+- https://github.com/emilv/ArduinoSort
 
 Python Libraries:
 - https://github.com/SolidCode/SolidPython
