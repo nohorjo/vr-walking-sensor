@@ -21,5 +21,5 @@ nano /etc/rc.local
 
 apt update --allow-releaseinfo-change
 apt-get install -y python3-pip python3-pil python3-rpi.gpio python3-smbus
-pip3 install adafruit-circuitpython-ssd1306 mpu6050-raspberrypi
+pip3 install adafruit-circuitpython-ssd1306
 
