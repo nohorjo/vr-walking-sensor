@@ -2,10 +2,10 @@
 #include <WebSocketsClient.h>
 #include <Wire.h>
 
-const char* ssid = "VRWALINGSENSORf8b7244402318";
-const char* password = "4d34c0958460d";
+#define SAMPLE_SIZE 25
+#define ZERO_TIME 200
 
-const uint8_t MPU6050SlaveAddress = 0x68;
+#define MPU6050SlaveAddress 0x68
 
 // MPU6050 few configuration register addresses
 #define MPU6050_REGISTER_SMPLRT_DIV        0x19
@@ -20,6 +20,24 @@ const uint8_t MPU6050SlaveAddress = 0x68;
 #define MPU6050_REGISTER_ACCEL_XOUT_H      0x3B
 #define MPU6050_REGISTER_SIGNAL_PATH_RESET 0x68
 
+const char *ssid =  "***REMOVED***";     // Enter your WiFi Name
+const char *password =  "***REMOVED***"; // Enter your WiFi Password
+
+int16_t Ay_upper = 2000;
+
+int16_t Ay;
+
+int current_index = 0;
+int16_t y_vals[SAMPLE_SIZE];
+
+int16_t Ay_last = 0;
+
+bool current_walking = false;
+
+unsigned long last_0_y = 0;
+
+WebSocketsClient webSocket;
+
 void setup() {
     pinMode(D3, OUTPUT);
     digitalWrite(D3, LOW);
@@ -32,7 +50,55 @@ void setup() {
 
     delay(5000);
 
-    webSocket.begin("192.168.1.15", 4513, URL);
+    webSocket.begin("192.168.1.15", 4513, "/");
+}
+
+void loop() {
+    Get_Data();
+
+    webSocket.loop();
+
+    if (Ay_upper) {
+        y_vals[current_index] = Ay;
+
+        if (current_index == SAMPLE_SIZE - 1) {
+            int16_t Ay_avg = 0;
+
+            for (char i = 0; i < SAMPLE_SIZE; i++) {
+                Ay_avg += y_vals[i];
+            }
+
+            Ay_avg = round(Ay_avg / SAMPLE_SIZE);
+
+            int16_t Ay_change = Ay_avg - Ay_last;
+
+            Ay_last = Ay_avg;
+
+            unsigned long current_time = millis();
+
+            if (current_walking) {
+                if (Ay_change < Ay_upper) {
+                    if (current_time - last_0_y > ZERO_TIME) {
+                        current_walking = false;
+                    }
+                } else {
+                    last_0_y = current_time;
+                }
+            } else if (Ay_change > Ay_upper) {
+                current_walking = true;
+                last_0_y = current_time;
+            }
+            if (current_walking) {
+                webSocket.sendTXT("f");
+            }
+        }
+
+        current_index = ++current_index % SAMPLE_SIZE;
+    } else {
+        calibrate();
+    }
+
+    delay(16);
 }
 
 void I2C_Write(uint8_t regAddress, uint8_t data){
