@@ -1,16 +1,14 @@
 # vr-walking-sensor
-Raspberry pi based walking/running/strafing sensors for use with VR games
+Arduino pi based walking sensors for use with VR games
 
 Components:
+- ESP32 board
 - MPU-6050 accelerometers
-- SSD1306 128x64 OLED display
-- ESP32 Bluetooth board
-- ESP8266 board * 3
-- 28BYJ-48 stepper motor with Uln2003 driver board * 2
+- ESP8266 board * 2
+- 28BYJ-48 stepper motor with Uln2003 driver board
 
 Software:
-- Arduino IDE - for the microcontrollers
-- Python3 - to process the sensor data
+- Python3 - to process solid python code
 - OpenScad - for rendering the 3d models
 
 Arduino Libraries:
@@ -18,8 +16,6 @@ Arduino Libraries:
 - https://github.com/me-no-dev/ESPAsyncTCP
 - https://github.com/me-no-dev/AsyncTCP
 - https://github.com/nohorjo/arduinoWebSockets
-- https://github.com/emilv/ArduinoSort
 
 Python Libraries:
 - https://github.com/SolidCode/SolidPython
-- websockets
