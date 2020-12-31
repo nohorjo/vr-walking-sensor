@@ -7,7 +7,7 @@ const char* ssid = "VRWALINGSENSORf8b7244402318";
 const char* password = "4d34c0958460d";
 
 #define ACTIVE_TIMEOUT 500
-#define NUMBER_OF_STEPS_PER_ROT 512
+#define NUMBER_OF_STEPS_PER_ROT 128
 #define A 26
 #define B 27
 #define C 14
@@ -22,17 +22,6 @@ AsyncWebSocket ws("/");
 
 unsigned long last_f = 0;
 bool is_forward = false;
-
-bool steps[8][4] = {
-    {1, 0, 0, 0},
-    {1, 1, 0, 0},
-    {0, 1, 0, 0},
-    {0, 1, 1, 0},
-    {0, 0, 1, 0},
-    {0, 0, 1, 1},
-    {0, 0, 0, 1},
-    {1, 0, 0, 1},
-};
 
 void handleWebSocketMessage(
     void *arg,
@@ -85,24 +74,23 @@ void setup(){
     pinMode(D, OUTPUT);
 }
 
-void do_step(char i) {
-    bool *step = steps[i];
-    digitalWrite(A, step[0]);
-    digitalWrite(B, step[1]);
-    digitalWrite(C, step[2]);
-    digitalWrite(D, step[2]);
-    delay(2);
+void do_step(short i) {
+    digitalWrite(A, i == 0);
+    digitalWrite(B, i == 1);
+    digitalWrite(C, i == 2);
+    digitalWrite(D, i == 3);
+    delay(4);
 }
 
 void rotate(bool clockwise){
-    for (int i = 0; i < NUMBER_OF_STEPS_PER_ROT; i++){
+    for (short i = 0; i < NUMBER_OF_STEPS_PER_ROT; i++){
         if (clockwise) {
-            for (short i = 7; i >= 0; i--) {
-                do_step(i);
+            for (short j = 3; j >= 0; j--) {
+                do_step(j);
             }
         } else {
-            for (short i = 0; i < 8; i++) {
-                do_step(i);
+            for (short j = 0; j < 4; j++) {
+                do_step(j);
             }
         }
     }
