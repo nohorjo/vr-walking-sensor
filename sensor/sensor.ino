@@ -20,8 +20,8 @@
 #define MPU6050_REGISTER_ACCEL_XOUT_H      0x3B
 #define MPU6050_REGISTER_SIGNAL_PATH_RESET 0x68
 
-const char *ssid =  "VodafoneConnect32255883";     // Enter your WiFi Name
-const char *password =  "9wfzf2iswa4zbf9"; // Enter your WiFi Password
+const char *ssid =  "***REMOVED***";     // Enter your WiFi Name
+const char *password =  "***REMOVED***"; // Enter your WiFi Password
 
 int16_t Ay_upper = 2000;
 
