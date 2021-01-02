@@ -3,12 +3,12 @@
 
 #include "constants.h"
 
-IPAddress local_IP(192, 168, 1, 15);
+IPAddress local_IP(IP_1, IP_2, IP_3, IP_4);
 IPAddress gateway(192, 168, 1, 9);
 IPAddress subnet(255, 255, 255, 0);
 
-AsyncWebServer server(4513);
-AsyncWebSocket ws("/");
+AsyncWebServer server(PORT);
+AsyncWebSocket ws(path);
 
 unsigned long last_f = 0;
 bool is_forward = false;
@@ -17,8 +17,8 @@ void setup(){
     WiFi.softAPConfig(local_IP, gateway, subnet);
     WiFi.softAP(ssid, password, 1, false);
 
-    initWebSocket();
-
+    ws.onEvent(onEvent);
+    server.addHandler(&ws);
     server.begin();
 
     pinMode(MOTOR_A, OUTPUT);
@@ -40,18 +40,6 @@ void loop(){
     delay(16);
 }
 
-void handleWebSocketMessage(
-    void *arg,
-    uint8_t *data,
-    size_t len,
-    AsyncWebSocketClient *client
-) {
-    AwsFrameInfo *info = (AwsFrameInfo*)arg;
-    if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
-        last_f = millis();
-    }
-}
-
 void onEvent(
     AsyncWebSocket *server,
     AsyncWebSocketClient *client,
@@ -60,21 +48,12 @@ void onEvent(
     uint8_t *data,
     size_t len
 ) {
-    switch (type) {
-        case WS_EVT_DATA:
-            handleWebSocketMessage(arg, data, len, client);
-            break;
-        case WS_EVT_CONNECT:
-        case WS_EVT_DISCONNECT:
-        case WS_EVT_PONG:
-        case WS_EVT_ERROR:
-            break;
+    if (type == WS_EVT_DATA) {
+        AwsFrameInfo *info = (AwsFrameInfo*)arg;
+        if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
+            last_f = millis();
+        }
     }
-}
-
-void initWebSocket() {
-    ws.onEvent(onEvent);
-    server.addHandler(&ws);
 }
 
 void do_step(short i) {

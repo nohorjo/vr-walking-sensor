@@ -34,7 +34,7 @@ void setup() {
 
     delay(1000);
 
-    webSocket.begin("192.168.1.15", 4513, "/");
+    webSocket.begin(ip, PORT, path);
 }
 
 void loop() {
