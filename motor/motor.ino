@@ -1,17 +1,7 @@
 #include "WiFi.h"
 #include "ESPAsyncWebServer.h"
 
-#include <Wire.h>
-
-const char* ssid = "VRWALINGSENSORf8b7244402318";
-const char* password = "4d34c0958460d";
-
-#define ACTIVE_TIMEOUT 500
-#define NUMBER_OF_STEPS_PER_ROT 128
-#define A 26
-#define B 27
-#define C 14
-#define D 12
+#include "constants.h"
 
 IPAddress local_IP(192, 168, 1, 15);
 IPAddress gateway(192, 168, 1, 9);
@@ -22,6 +12,33 @@ AsyncWebSocket ws("/");
 
 unsigned long last_f = 0;
 bool is_forward = false;
+
+void setup(){
+    WiFi.softAPConfig(local_IP, gateway, subnet);
+    WiFi.softAP(ssid, password, 1, false);
+
+    initWebSocket();
+
+    server.begin();
+
+    pinMode(MOTOR_A, OUTPUT);
+    pinMode(MOTOR_B, OUTPUT);
+    pinMode(MOTOR_C, OUTPUT);
+    pinMode(MOTOR_D, OUTPUT);
+}
+
+void loop(){
+    unsigned long duration = millis() - last_f;
+    if (is_forward && duration > ACTIVE_TIMEOUT) {
+        rotate(true);
+        is_forward = false;
+    }
+    if (!is_forward && duration < ACTIVE_TIMEOUT) {
+        rotate(false);
+        is_forward = true;
+    }
+    delay(16);
+}
 
 void handleWebSocketMessage(
     void *arg,
@@ -60,25 +77,11 @@ void initWebSocket() {
     server.addHandler(&ws);
 }
 
-void setup(){
-    WiFi.softAPConfig(local_IP, gateway, subnet);
-    WiFi.softAP(ssid, password, 1, false);
-
-    initWebSocket();
-
-    server.begin();
-
-    pinMode(A, OUTPUT);
-    pinMode(B, OUTPUT);
-    pinMode(C, OUTPUT);
-    pinMode(D, OUTPUT);
-}
-
 void do_step(short i) {
-    digitalWrite(A, i == 0);
-    digitalWrite(B, i == 1);
-    digitalWrite(C, i == 2);
-    digitalWrite(D, i == 3);
+    digitalWrite(MOTOR_A, i == 0);
+    digitalWrite(MOTOR_B, i == 1);
+    digitalWrite(MOTOR_C, i == 2);
+    digitalWrite(MOTOR_D, i == 3);
     delay(4);
 }
 
@@ -96,15 +99,3 @@ void rotate(bool clockwise){
     }
 }
  
-void loop(){
-    unsigned long duration = millis() - last_f;
-    if (is_forward && duration > ACTIVE_TIMEOUT) {
-        rotate(true);
-        is_forward = false;
-    }
-    if (!is_forward && duration < ACTIVE_TIMEOUT) {
-        rotate(false);
-        is_forward = true;
-    }
-    delay(16);
-}

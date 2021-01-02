@@ -2,8 +2,7 @@
 #include <WebSocketsClient.h>
 #include <Wire.h>
 
-#define SAMPLE_SIZE 25
-#define ZERO_TIME 200
+#include "constants.h"
 
 #define MPU6050SlaveAddress 0x68
 
@@ -20,27 +19,12 @@
 #define MPU6050_REGISTER_ACCEL_XOUT_H      0x3B
 #define MPU6050_REGISTER_SIGNAL_PATH_RESET 0x68
 
-const char *ssid =  "***REMOVED***";     // Enter your WiFi Name
-const char *password =  "***REMOVED***"; // Enter your WiFi Password
-
-int16_t Ay_upper = 2000;
-
-int16_t Ay;
-
 int current_index = 0;
 int16_t y_vals[SAMPLE_SIZE];
-
-int16_t Ay_last = 0;
-
-bool current_walking = false;
-
-unsigned long last_0_y = 0;
-
+int16_t z_vals[SAMPLE_SIZE];
 WebSocketsClient webSocket;
 
 void setup() {
-    pinMode(D3, OUTPUT);
-    digitalWrite(D3, LOW);
     Wire.begin(D7, D6);
     MPU6050_Init();
     WiFi.begin(ssid, password);
@@ -48,7 +32,7 @@ void setup() {
         delay(500);
     }
 
-    delay(5000);
+    delay(1000);
 
     webSocket.begin("192.168.1.15", 4513, "/");
 }
@@ -58,47 +42,29 @@ void loop() {
 
     webSocket.loop();
 
-    if (Ay_upper) {
-        y_vals[current_index] = Ay;
+    if (current_index == SAMPLE_SIZE - 1) {
+        unsigned long Ay = 0;
+        unsigned long Az = 0;
 
-        if (current_index == SAMPLE_SIZE - 1) {
-            int16_t Ay_avg = 0;
+        for (char i = 0; i < SAMPLE_SIZE; i++) {
+            int16_t y = y_vals[i];
+            Ay += (y < 0 ? -y : y);
 
-            for (char i = 0; i < SAMPLE_SIZE; i++) {
-                Ay_avg += y_vals[i];
-            }
-
-            Ay_avg = round(Ay_avg / SAMPLE_SIZE);
-
-            int16_t Ay_change = Ay_avg - Ay_last;
-
-            Ay_last = Ay_avg;
-
-            unsigned long current_time = millis();
-
-            if (current_walking) {
-                if (Ay_change < Ay_upper) {
-                    if (current_time - last_0_y > ZERO_TIME) {
-                        current_walking = false;
-                    }
-                } else {
-                    last_0_y = current_time;
-                }
-            } else if (Ay_change > Ay_upper) {
-                current_walking = true;
-                last_0_y = current_time;
-            }
-            if (current_walking) {
-                webSocket.sendTXT("f");
-            }
+            Az += z_vals[i];
         }
 
-        current_index = ++current_index % SAMPLE_SIZE;
-    } else {
-        calibrate();
+        Ay = Ay / SAMPLE_SIZE;
+        Az = Az / SAMPLE_SIZE;
+
+        int16_t A = sqrt(sq(Ay) + sq(Az));
+
+        if (A > AY_UPPER) {
+            webSocket.sendTXT("f");
+        }
     }
 
-    delay(16);
+    current_index = ++current_index % SAMPLE_SIZE;
+    delay(10);
 }
 
 void I2C_Write(uint8_t regAddress, uint8_t data){
@@ -115,15 +81,14 @@ void Get_Data(){
     Wire.endTransmission();
     Wire.requestFrom(MPU6050SlaveAddress, (uint8_t)14, true);
 
-    Ax = (((int16_t)Wire.read()<<8) | Wire.read());
-    Ay = (((int16_t)Wire.read()<<8) | Wire.read());
+    Wire.read(); Wire.read(); // skip ax
+    y_vals[current_index] = ((int16_t)Wire.read()<<8) | Wire.read();
+    z_vals[current_index] = ((int16_t)Wire.read()<<8) | Wire.read();
 
-    Wire.read(); Wire.read(); // skip az
     Wire.read(); Wire.read(); // skip temp
     Wire.read(); Wire.read(); // skip gx
     Wire.read(); Wire.read(); // skip gy
-
-    Gz = (((int16_t)Wire.read()<<8) | Wire.read());
+    Wire.read(); Wire.read(); // skip gz
 }
 
 //configure MPU6050
