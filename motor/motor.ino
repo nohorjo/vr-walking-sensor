@@ -9,8 +9,11 @@ AsyncWebSocket ws(path);
 unsigned long last_f = 0;
 bool is_forward = false;
 
-void setup(){
-    WiFi.softAP(ssid, password, 1, false);
+void setup() {
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+    }
 
     ws.onEvent(onEvent);
     server.addHandler(&ws);
@@ -22,7 +25,7 @@ void setup(){
     pinMode(MOTOR_D, OUTPUT);
 }
 
-void loop(){
+void loop() {
     unsigned long duration = millis() - last_f;
     if (is_forward && duration > ACTIVE_TIMEOUT) {
         rotate(is_forward = false);

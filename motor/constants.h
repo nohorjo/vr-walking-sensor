@@ -1,8 +1,8 @@
 #define AY_UPPER 15800
-#define SAMPLE_SIZE 20
+#define SAMPLE_SIZE 16
 
-#define ACTIVE_TIMEOUT 500
-#define NUMBER_OF_STEPS_PER_ROT 20
+#define ACTIVE_TIMEOUT 600
+#define NUMBER_OF_STEPS_PER_ROT 24
 
 #define MOTOR_A 26
 #define MOTOR_B 27
@@ -11,9 +11,9 @@
 
 #define PORT 4513
 
-const char* ssid = "VRWALINGSENSORf8b7244402318";
-const char* password = "4d34c0958460d";
+const char* ssid = ""; // Your wifi SSID
+const char* password = ""; // Your wifi password
 
-const char* ip = "192.168.4.1";
+const char* ip = "192.168.1.11"; // Local IP address of your motor controller. Your router should be set up to make this static
 const char* path = "/";
 
