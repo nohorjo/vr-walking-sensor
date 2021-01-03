@@ -3,10 +3,6 @@
 
 #include "constants.h"
 
-IPAddress local_IP(IP_1, IP_2, IP_3, IP_4);
-IPAddress gateway(192, 168, 1, 9);
-IPAddress subnet(255, 255, 255, 0);
-
 AsyncWebServer server(PORT);
 AsyncWebSocket ws(path);
 
@@ -14,7 +10,6 @@ unsigned long last_f = 0;
 bool is_forward = false;
 
 void setup(){
-    WiFi.softAPConfig(local_IP, gateway, subnet);
     WiFi.softAP(ssid, password, 1, false);
 
     ws.onEvent(onEvent);
@@ -30,12 +25,10 @@ void setup(){
 void loop(){
     unsigned long duration = millis() - last_f;
     if (is_forward && duration > ACTIVE_TIMEOUT) {
-        rotate(true);
-        is_forward = false;
+        rotate(is_forward = false);
     }
     if (!is_forward && duration < ACTIVE_TIMEOUT) {
-        rotate(false);
-        is_forward = true;
+        rotate(is_forward = true);
     }
     delay(16);
 }

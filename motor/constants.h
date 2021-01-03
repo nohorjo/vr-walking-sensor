@@ -14,10 +14,6 @@
 const char* ssid = "VRWALINGSENSORf8b7244402318";
 const char* password = "4d34c0958460d";
 
-#define IP_1 192
-#define IP_2 168
-#define IP_3 1
-#define IP_4 15
-const char* ip = "192.168.1.15";
+const char* ip = "192.168.4.1";
 const char* path = "/";
 

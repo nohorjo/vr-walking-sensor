@@ -26,7 +26,9 @@ WebSocketsClient webSocket;
 
 void setup() {
     Wire.begin(D7, D6);
+
     MPU6050_Init();
+
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
