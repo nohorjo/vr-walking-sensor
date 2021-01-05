@@ -18,9 +18,10 @@ if __name__ == '__main__':
 
     model += translate([-20, 10, 8.5])((rotate(90, FORWARD_VEC)(tube_part)))
 
-    model += translate([0, -20, 3])(
+    model += translate([0, -16, 3])(
         minkowski()(cube([30, 4, 6], True), rotate(90, LEFT_VEC)(cylinder(d = 10, h = 0.1)))
     )
+    model -= back(23)(cube([25, 10, 20], True))
 
     scad_render_to_file(model, '_%s.scad'% __file__.split('/')[-1][:-3])
 
