@@ -22,5 +22,5 @@ if __name__ == '__main__':
         minkowski()(cube([30, 4, 6], True), rotate(90, LEFT_VEC)(cylinder(d = 10, h = 0.1)))
     )
 
-    scad_render_to_file(model, '_%s.scad'% __file__[:-3])
+    scad_render_to_file(model, '_%s.scad'% __file__.split('/')[-1][:-3])
 

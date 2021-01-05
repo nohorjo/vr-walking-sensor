@@ -38,4 +38,4 @@ def strap():
 if __name__ == '__main__':
     model = strap()
 
-    scad_render_to_file(model, '_%s.scad'% __file__[:-3])
+    scad_render_to_file(model, '_%s.scad'% __file__.split('/')[-1][:-3])

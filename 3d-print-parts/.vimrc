@@ -47,7 +47,7 @@ function! NewPython()
     call append(i, "") | let i = i + 1
     call append(i, "if __name__ == '__main__':") | let i = i + 1
     call append(i, "    model = None") | let i = i + 1
-    call append(i, "    scad_render_to_file(model, '_%s.scad'% __file__[:-3])") | let i = i + 1
+    call append(i, "    scad_render_to_file(model, '_%s.scad'% __file__.split('/')[-1][:-3])") | let i = i + 1
     execute i - 1
 endfunction
 
