@@ -14,10 +14,10 @@ def atan(a):
     return math.degrees(math.atan(a))
 
 def gradient():
-    x = 81.0
-    y = 41.0
-    thick = 1.8
-    thin = 0.9
+    x = 244 / 3
+    y = 122 / 3
+    thick = 2.5
+    thin = 0.6
     support_count = 5
 
     angle = atan(x / (support_count * y))
