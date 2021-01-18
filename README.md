@@ -1,11 +1,13 @@
 # vr-walking-sensor
-Arduino pi based walking sensors for use with VR games
+Arduino based walking sensors for use with VR games
 
 Components:
 - ESP32 board
-- MPU-6050 accelerometers
-- ESP8266 board * 2
+- ESP8266 board
 - 28BYJ-48 stepper motor with Uln2003 driver board
+- KY-008 laser transmitter
+
+**You could use the same ESP boards (modifying the code slightly). I just used what I had**
 
 Software:
 - Python3 - to process solid python code

@@ -3,11 +3,15 @@
 
 #include "constants.h"
 
+#define MOVE 0
+#define STOP 1
+#define MOVED 2
+#define STOPPED 3
+
 AsyncWebServer server(PORT);
 AsyncWebSocket ws(path);
 
-unsigned long last_f = 0;
-bool is_forward = false;
+char state = STOPPED;
 
 void setup() {
     WiFi.begin(ssid, password);
@@ -26,12 +30,15 @@ void setup() {
 }
 
 void loop() {
-    unsigned long duration = millis() - last_f;
-    if (is_forward && duration > ACTIVE_TIMEOUT) {
-        rotate(is_forward = false);
-    }
-    if (!is_forward && duration < ACTIVE_TIMEOUT) {
-        rotate(is_forward = true);
+    switch (state) {
+        case MOVE:
+            rotate(true);
+            state = MOVED;
+            break;
+        case STOP:
+            rotate(false);
+            state = STOPPED;
+            break;
     }
     delay(16);
 }
@@ -47,7 +54,13 @@ void onEvent(
     if (type == WS_EVT_DATA) {
         AwsFrameInfo *info = (AwsFrameInfo*)arg;
         if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
-            last_f = millis();
+            char next_state = atoi((char*)data);
+            if (
+                (next_state == MOVE && state != MOVED)
+                || (next_state == STOP && state != STOPPED)
+            ) {
+                state = next_state;
+            }
         }
     }
 }

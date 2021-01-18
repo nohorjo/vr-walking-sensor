@@ -35,7 +35,9 @@ scad: $(patsubst %.py,_%.scad,$(SOURCES))
 _%.scad: %.py
 	python $<
 
+
 stl/%.stl: _%.scad
+	mkdir -p stl
 	openscad -D '$$fn=100' -m make -o $@ $< || echo -e "\033[1;41mFAIL\033[0m $@"
 
 clean:

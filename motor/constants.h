@@ -1,13 +1,12 @@
-#define AY_UPPER 15800
-#define SAMPLE_SIZE 16
-
-#define ACTIVE_TIMEOUT 600
-#define NUMBER_OF_STEPS_PER_ROT 24
+#define NUMBER_OF_STEPS_PER_ROT 30
 
 #define MOTOR_A 26
 #define MOTOR_B 27
 #define MOTOR_C 14
 #define MOTOR_D 12
+
+#define SENSOR 0
+#define SENSOR_THRESHOLD 308
 
 #define PORT 4513
 

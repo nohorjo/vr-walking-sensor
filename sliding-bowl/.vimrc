@@ -1,1 +1,0 @@
-../3d-print-parts/.vimrc
