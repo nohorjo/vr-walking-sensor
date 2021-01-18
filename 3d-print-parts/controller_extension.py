@@ -14,7 +14,9 @@ if __name__ == '__main__':
 
     model = linear_extrude(6)(model)
 
-    tube_part = cylinder(d = tube_d + 4, h = 7) - cylinder(d = tube_d, h = 10)
+    tube_part = cylinder(d = tube_d + 4, h = 7)
+    tube_part -= cylinder(d = tube_d - 0.3, h = 10)
+    tube_part -= cube([cable_d + 0.1, 10, 10])
 
     model += translate([-20, 10, 8.5])((rotate(90, FORWARD_VEC)(tube_part)))
 
