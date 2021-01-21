@@ -55,6 +55,9 @@ void onEvent(
         AwsFrameInfo *info = (AwsFrameInfo*)arg;
         if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
             char next_state = atoi((char*)data);
+            while (state != MOVED && state != STOPPED) {
+                delay(5);
+            }
             if (
                 (next_state == MOVE && state != MOVED)
                 || (next_state == STOP && state != STOPPED)
