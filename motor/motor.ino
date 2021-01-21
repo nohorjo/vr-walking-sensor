@@ -54,12 +54,16 @@ void onEvent(
     if (type == WS_EVT_DATA) {
         AwsFrameInfo *info = (AwsFrameInfo*)arg;
         if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) {
+            unsigned long time = millis();
             char next_state = atoi((char*)data);
             while (state != MOVED && state != STOPPED) {
                 delay(5);
             }
             if (
-                (next_state == MOVE && state != MOVED)
+                (
+                    (millis() - time) < 50
+                    && next_state == MOVE && state != MOVED
+                )
                 || (next_state == STOP && state != STOPPED)
             ) {
                 state = next_state;
