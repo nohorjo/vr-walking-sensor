@@ -2,12 +2,9 @@
 Arduino based walking sensors for use with VR games
 
 Components:
-- ESP32 board
-- ESP8266 board
+- ESP8266 board * 2
 - 28BYJ-48 stepper motor with Uln2003 driver board
 - KY-008 laser transmitter
-
-**You could use the same ESP boards (modifying the code slightly). I just used what I had**
 
 Software:
 - Python3 - to process solid python code
