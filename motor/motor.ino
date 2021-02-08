@@ -77,7 +77,7 @@ void do_step(short i) {
     digitalWrite(MOTOR_B, i == 1);
     digitalWrite(MOTOR_C, i == 2);
     digitalWrite(MOTOR_D, i == 3);
-    delay(4);
+    delay(2);
 }
 
 void rotate(bool clockwise){
